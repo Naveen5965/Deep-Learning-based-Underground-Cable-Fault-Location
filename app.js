@@ -73,8 +73,13 @@ const CONTROLLER_REFRESH_INTERVAL_MS = 500;
 // ======================================================
 
 const TILE_URLS = {
-    osm:  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-    topo: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png"
+    osm:       "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    topo:      "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+    satellite: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    terrain:   "https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}.png",
+    dark:      "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+    light:     "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+    cycle:     "https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png"
 };
 
 const map = L.map("map").setView(
