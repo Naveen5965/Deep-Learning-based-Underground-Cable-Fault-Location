@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Buried Cable Monitoring System</title>
+    <link rel="icon" href="data:,">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Leaflet CSS -->
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+    <header>
+
+        <div>
+            <h1>Buried Cable Monitoring System</h1>
+            <p>Monitoring Dashboard</p>
+        </div>
+
+        <div class="online" id="controllerBadge">
+            <span id="controllerDot"></span>
+            <span id="controllerBadgeText">CONTROLLER ONLINE</span>
+        </div>
+
+        <button class="power-btn" id="powerBtn" title="Toggle device power">
+            <svg class="power-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18.36 6.64a9 9 0 1 1-12.73 0"/>
+                <line x1="12" y1="2" x2="12" y2="12"/>
+            </svg>
+            <span id="powerBtnText">TURN OFF</span>
+        </button>
+
+    </header>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main>
+
+        <div class="device-off-banner">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
+            Device is OFF — commands paused
+        </div>
+
+        <!-- ================= STATUS CARDS ================= -->
+
+        <section class="cards">
+
+            <!-- DEVICE -->
+
+            <div class="card">
+
+                <div class="card-header">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                    </div>
+                    <h3>DEVICE</h3>
+                </div>
+
+                <strong id="device">
+                    ESP32-001
+                </strong>
+
+                <p id="deviceStatusText">Connected</p>
+
+            </div>
+
+
+            <!-- DETECTION -->
+
+            <div class="card">
+
+                <div class="card-header">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12"/></svg>
+                    </div>
+                    <h3>DETECTION</h3>
+                </div>
+
+                <strong id="detection">
+                    DETECTED
+                </strong>
+
+                <p>Current status</p>
+
+            </div>
+
+
+            <!-- SIGNAL -->
+
+            <div class="card">
+
+                <div class="card-header">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24"><path d="M1 6l5 5 4-7 4 10 3-5 3 3 3-3"/></svg>
+                    </div>
+                    <h3>SIGNAL</h3>
+                </div>
+
+                <strong id="signal">
+                    82%
+                </strong>
+
+                <div class="signal-bar">
+
+                    <div id="signalFill"></div>
+
+                </div>
+
+                <p>Detection strength</p>
+
+            </div>
+
+
+            <!-- GPS -->
+
+            <div class="card">
+
+                <div class="card-header">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                    </div>
+                    <h3>GPS</h3>
+                </div>
+
+                <strong id="gps">
+                    FIXED
+                </strong>
+
+                <p>Position available</p>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= MAP ================= -->
+
+        <section class="panel">
+
+            <div class="panel-title">
+
+                <h2>Live Detection Map</h2>
+
+                <div class="map-title-right">
+                    <div class="panel-meta">
+                        <span class="panel-meta-dot"></span>
+                        <span id="mapLastUpdated">Live</span>
+                    </div>
+                    <button id="locateBtn" class="locate-btn" title="Show my location">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+                        </svg>
+                        My Location
+                    </button>
+                </div>
+
+            </div>
+
+            <div id="map"></div>
+
+            <div class="map-coords">
+                <div>
+                    <span>Device</span>
+                    <span id="deviceCoords">—</span>
+                </div>
+                <div id="myLocationRow" style="display:none">
+                    <span>My Location</span>
+                    <span id="myCoords">—</span>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- ================= SENSOR + GRAPH ================= -->
+
+        <section class="grid">
+
+
+            <!-- MAGNETIC FIELD -->
+
+            <div class="panel">
+
+                <h2>
+                    Magnetic Field
+                </h2>
+
+                <div class="sensor-values">
+
+                    <div>
+                        <span>X</span>
+                        <div style="display:flex;align-items:baseline;gap:3px">
+                            <strong id="magX">125.4</strong>
+                            <span class="sensor-unit">µT</span>
+                        </div>
+                    </div>
+
+
+                    <div>
+                        <span>Y</span>
+                        <div style="display:flex;align-items:baseline;gap:3px">
+                            <strong id="magY">-47.8</strong>
+                            <span class="sensor-unit">µT</span>
+                        </div>
+                    </div>
+
+
+                    <div>
+                        <span>Z</span>
+                        <div style="display:flex;align-items:baseline;gap:3px">
+                            <strong id="magZ">891.2</strong>
+                            <span class="sensor-unit">µT</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- SIGNAL GRAPH -->
+
+            <div class="panel">
+
+                <h2>
+                    Detection Signal
+                </h2>
+
+                <canvas id="signalChart"></canvas>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= DEVICE STATUS ================= -->
+
+        <section class="panel">
+
+            <h2>
+                Device Status
+            </h2>
+
+            <div class="status-grid">
+
+
+                <div>
+
+                    <span>
+                        Controller
+                    </span>
+
+                    <b id="controllerStatusText">
+                        ONLINE
+                    </b>
+
+                    <small id="controllerStatusHint">
+                        Waiting for telemetry
+                    </small>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Wi-Fi
+                    </span>
+
+                    <b id="wifiStatusText">
+                        CONNECTED
+                    </b>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        GPS
+                    </span>
+
+                    <b id="gpsStatusText">
+                        FIXED
+                    </b>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Cloud
+                    </span>
+
+                    <b id="cloudStatusText">
+                        CONNECTED
+                    </b>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= HISTORY ================= -->
+
+        <section class="panel">
+
+            <h2>
+                Detection History
+            </h2>
+
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Time</th>
+                        <th>Signal</th>
+                        <th>Latitude</th>
+                        <th>Longitude</th>
+                        <th>Status</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="history">
+                    <!-- JavaScript will insert rows here -->
+                </tbody>
+
+            </table>
+
+        </section>
+
+    </main>
+
+
+    <!-- ================= JAVASCRIPT LIBRARIES ================= -->
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+    </script>
+
+
+    <!-- ================= OUR JAVASCRIPT ================= -->
+
+    <script src="app.js"></script>
+
+</body>
+
+</html>
