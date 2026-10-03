@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History — Buried Cable Monitoring System</title>
+    <link rel="icon" href="data:,">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="nav.css">
+    <style>
+        .page-title { margin: 0 0 20px; font-family: "Space Grotesk", sans-serif; font-size: 1.5rem; letter-spacing: -0.03em; }
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .toolbar select, .toolbar input {
+            padding: 8px 14px;
+            border-radius: 10px;
+            background: rgba(18, 16, 28, 0.8);
+            border: 1px solid rgba(200, 190, 220, 0.14);
+            color: var(--text);
+            font-family: "Manrope", sans-serif;
+            font-size: 0.82rem;
+            outline: none;
+            transition: border-color 150ms ease;
+        }
+        .toolbar select:focus, .toolbar input:focus { border-color: rgba(167, 139, 250, 0.4); }
+        .toolbar-spacer { flex: 1; }
+        .btn-export {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 16px;
+            border-radius: 10px;
+            background: rgba(52, 211, 153, 0.1);
+            border: 1px solid rgba(52, 211, 153, 0.26);
+            color: #34d399;
+            font-family: "Manrope", sans-serif;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 150ms ease, transform 120ms ease;
+        }
+        .btn-export:hover { background: rgba(52, 211, 153, 0.18); transform: translateY(-1px); }
+        .btn-export svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .record-count { color: var(--muted); font-size: 0.82rem; }
+        .loading-row td { text-align: center; color: var(--muted); padding: 32px; }
+        .table-wrap { overflow-x: auto; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-brand">
+            <img src="logo.png" alt="Logo" class="header-logo">
+            <div>
+                <h1>Buried Cable Monitoring System</h1>
+                <p>Detection History</p>
+            </div>
+        </div>
+        <nav>
+            <a href="home.html"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+            <a href="index.html"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg><span>Dashboard</span></a>
+            <a href="history.html" class="active"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>History</span></a>
+            <a href="settings.html"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+            <a href="about.html"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>About</span></a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="panel">
+            <h2 class="page-title">Detection History</h2>
+
+            <div class="toolbar">
+                <select id="filterStatus">
+                    <option value="">All Statuses</option>
+                    <option value="CABLE DETECTED">Cable Detected</option>
+                    <option value="POSSIBLE CABLE">Possible Cable</option>
+                    <option value="NO CABLE">No Cable</option>
+                </select>
+                <select id="filterLimit">
+                    <option value="50">Last 50</option>
+                    <option value="100">Last 100</option>
+                    <option value="200">Last 200</option>
+                    <option value="500">Last 500</option>
+                </select>
+                <span class="record-count" id="recordCount"></span>
+                <div class="toolbar-spacer"></div>
+                <button class="btn-export" id="exportBtn">
+                    <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Export CSV
+                </button>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Device</th>
+                            <th>Signal</th>
+                            <th>Mag X</th>
+                            <th>Mag Y</th>
+                            <th>Mag Z</th>
+                            <th>Latitude</th>
+                            <th>Longitude</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyBody">
+                        <tr class="loading-row"><td colspan="9">Loading…</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = "https://awauazxngkwjikarllui.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_M3t6466_21zA1-X2LTT3KQ_yfwyOx1v";
+        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        let allData = [];
+
+        function statusBadge(s) {
+            s = (s || "").toUpperCase();
+            if (s.includes("CABLE DETECTED") || s === "DETECTED")
+                return `<span class="badge badge-detected">${s}</span>`;
+            if (s.includes("POSSIBLE"))
+                return `<span class="badge badge-unknown">${s}</span>`;
+            if (s.includes("NO CABLE") || s.includes("NOT"))
+                return `<span class="badge badge-not-detected">${s}</span>`;
+            return `<span class="badge badge-unknown">${s || "UNKNOWN"}</span>`;
+        }
+
+        function renderTable(data) {
+            const tbody = document.getElementById("historyBody");
+            document.getElementById("recordCount").textContent = data.length + " records";
+            if (!data.length) {
+                tbody.innerHTML = `<tr class="loading-row"><td colspan="9">No records found.</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = data.map(r => `<tr>
+                <td data-label="Time">${new Date(r.timestamp).toLocaleString()}</td>
+                <td data-label="Device">${r.device_id || "--"}</td>
+                <td data-label="Signal">${r.signal_strength != null ? Number(r.signal_strength).toFixed(1) + "%" : "--"}</td>
+                <td data-label="Mag X">${r.magnetic_x != null ? Number(r.magnetic_x).toFixed(2) : "--"}</td>
+                <td data-label="Mag Y">${r.magnetic_y != null ? Number(r.magnetic_y).toFixed(2) : "--"}</td>
+                <td data-label="Mag Z">${r.magnetic_z != null ? Number(r.magnetic_z).toFixed(2) : "--"}</td>
+                <td data-label="Lat">${r.latitude != null ? Number(r.latitude).toFixed(5) : "--"}</td>
+                <td data-label="Lng">${r.longitude != null ? Number(r.longitude).toFixed(5) : "--"}</td>
+                <td data-label="Status">${statusBadge(r.detection_status)}</td>
+            </tr>`).join("");
+        }
+
+        function applyFilter() {
+            const status = document.getElementById("filterStatus").value;
+            let filtered = allData;
+            if (status) filtered = allData.filter(r => (r.detection_status || "").toUpperCase() === status.toUpperCase());
+            renderTable(filtered);
+        }
+
+        async function loadHistory() {
+            const limit = parseInt(document.getElementById("filterLimit").value) || 50;
+            const { data, error } = await sb
+                .from("sensor_readings")
+                .select("*")
+                .order("timestamp", { ascending: false })
+                .limit(limit);
+            if (error) {
+                document.getElementById("historyBody").innerHTML =
+                    `<tr class="loading-row"><td colspan="9">Error: ${error.message}</td></tr>`;
+                return;
+            }
+            allData = data || [];
+            applyFilter();
+        }
+
+        function exportCSV() {
+            const status = document.getElementById("filterStatus").value;
+            const rows = status ? allData.filter(r => (r.detection_status || "").toUpperCase() === status.toUpperCase()) : allData;
+            const headers = ["timestamp","device_id","signal_strength","magnetic_x","magnetic_y","magnetic_z","latitude","longitude","detection_status"];
+            const csv = [headers.join(","), ...rows.map(r => headers.map(h => JSON.stringify(r[h] ?? "")).join(","))].join("\n");
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+            a.download = "detection_history.csv";
+            a.click();
+        }
+
+        document.getElementById("filterStatus").addEventListener("change", applyFilter);
+        document.getElementById("filterLimit").addEventListener("change", loadHistory);
+        document.getElementById("exportBtn").addEventListener("click", exportCSV);
+
+        loadHistory();
+    </script>
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About — Buried Cable Monitoring System</title>
+    <link rel="icon" href="data:,">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="nav.css">
+    <style>
+        .about-hero {
+            text-align: center;
+            padding: 52px 24px 40px;
+        }
+        .about-hero h2 {
+            margin: 0 0 14px;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            letter-spacing: -0.04em;
+            background: linear-gradient(135deg, #f2f0f7 30%, #a78bfa 60%, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .about-hero p {
+            margin: 0 auto;
+            max-width: 600px;
+            color: var(--muted);
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+        .spec-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+        .spec-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            border-radius: 12px;
+            background: rgba(18, 16, 28, 0.55);
+            border: 1px solid rgba(200, 190, 220, 0.09);
+            font-size: 0.88rem;
+        }
+        .spec-list li span:first-child { color: var(--muted); }
+        .spec-list li span:last-child { font-weight: 700; font-family: "Space Grotesk", sans-serif; }
+        .tech-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+        .tech-chip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 16px;
+            border-radius: 14px;
+            background: rgba(18, 16, 28, 0.55);
+            border: 1px solid rgba(200, 190, 220, 0.09);
+        }
+        .tech-dot {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .tech-chip strong { display: block; font-size: 0.88rem; }
+        .tech-chip span { color: var(--muted); font-size: 0.76rem; }
+        .team-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+        .team-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 18px;
+            border-radius: 16px;
+            background: rgba(18, 16, 28, 0.55);
+            border: 1px solid rgba(200, 190, 220, 0.09);
+        }
+        .team-avatar {
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .team-card strong { display: block; font-size: 0.92rem; }
+        .team-card span { color: var(--muted); font-size: 0.78rem; }
+        @media (max-width: 860px) { .two-col { grid-template-columns: 1fr; } .tech-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 560px) { .tech-grid { grid-template-columns: 1fr; } .team-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-brand">
+            <img src="logo.png" alt="Logo" class="header-logo">
+            <div>
+                <h1>Buried Cable Monitoring System</h1>
+                <p>About this Project</p>
+            </div>
+        </div>
+        <nav>
+            <a href="home.html"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+            <a href="index.html"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg><span>Dashboard</span></a>
+            <a href="history.html"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>History</span></a>
+            <a href="settings.html"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+            <a href="about.html" class="active"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>About</span></a>
+        </nav>
+    </header>
+
+    <main>
+
+        <div class="about-hero">
+            <h2>About the Project</h2>
+            <p>A final year engineering project that combines embedded systems, cloud infrastructure, and a real-time web dashboard to detect and map buried electrical cables non-invasively.</p>
+        </div>
+
+        <div class="two-col">
+
+            <!-- HARDWARE SPECS -->
+            <section class="panel">
+                <h2>Hardware</h2>
+                <ul class="spec-list">
+                    <li><span>Microcontroller</span><span>ESP32-S3</span></li>
+                    <li><span>Sensor</span><span>3-Axis Magnetometer</span></li>
+                    <li><span>GPS Module</span><span>NEO-6M / NEO-8M</span></li>
+                    <li><span>Connectivity</span><span>Wi-Fi 802.11 b/g/n</span></li>
+                    <li><span>Power</span><span>3.3V / USB-C</span></li>
+                    <li><span>Update Rate</span><span>Every 5 seconds</span></li>
+                </ul>
+            </section>
+
+            <!-- HOW IT WORKS -->
+            <section class="panel">
+                <h2>How It Works</h2>
+                <ul class="spec-list">
+                    <li><span>1. Scan</span><span>Magnetometer reads field</span></li>
+                    <li><span>2. Classify</span><span>ESP32 computes signal %</span></li>
+                    <li><span>3. Stamp</span><span>GPS coordinates attached</span></li>
+                    <li><span>4. Upload</span><span>POST to Supabase via HTTPS</span></li>
+                    <li><span>5. Push</span><span>Realtime to dashboard</span></li>
+                    <li><span>6. Control</span><span>Dashboard sends ON/OFF</span></li>
+                </ul>
+            </section>
+
+        </div>
+
+        <!-- TECH STACK -->
+        <section class="panel">
+            <h2>Tech Stack</h2>
+            <div class="tech-grid">
+                <div class="tech-chip">
+                    <div class="tech-dot" style="background:#fb923c"></div>
+                    <div><strong>ESP32-S3</strong><span>Firmware / C++</span></div>
+                </div>
+                <div class="tech-chip">
+                    <div class="tech-dot" style="background:#34d399"></div>
+                    <div><strong>Supabase</strong><span>Database + Realtime</span></div>
+                </div>
+                <div class="tech-chip">
+                    <div class="tech-dot" style="background:#a78bfa"></div>
+                    <div><strong>Leaflet.js</strong><span>Interactive Map</span></div>
+                </div>
+                <div class="tech-chip">
+                    <div class="tech-dot" style="background:#f472b6"></div>
+                    <div><strong>Chart.js</strong><span>Signal Graph</span></div>
+                </div>
+                <div class="tech-chip">
+                    <div class="tech-dot" style="background:#38bdf8"></div>
+                    <div><strong>HTML / CSS / JS</strong><span>Frontend Dashboard</span></div>
+                </div>
+                <div class="tech-chip">
+                    <div class="tech-dot" style="background:#fbbf24"></div>
+                    <div><strong>ArduinoJson</strong><span>JSON parsing on ESP32</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TEAM -->
+        <section class="panel">
+            <h2>Team</h2>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-avatar" style="background:rgba(167,139,250,0.15);color:#a78bfa">N</div>
+                    <div><strong>Naveen</strong><span>Hardware & Firmware</span></div>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar" style="background:rgba(52,211,153,0.15);color:#34d399">—</div>
+                    <div><strong>Team Member</strong><span>Web Dashboard</span></div>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar" style="background:rgba(244,114,182,0.15);color:#f472b6">—</div>
+                    <div><strong>Team Member</strong><span>Cloud & Database</span></div>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar" style="background:rgba(251,146,60,0.15);color:#fb923c">—</div>
+                    <div><strong>Team Member</strong><span>Testing & Documentation</span></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+</body>
+</html>

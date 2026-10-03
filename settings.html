@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings — Buried Cable Monitoring System</title>
+    <link rel="icon" href="data:,">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="nav.css">
+    <style>
+        .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+        .settings-section h3 {
+            margin: 0 0 16px;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 1rem;
+            letter-spacing: -0.02em;
+            color: var(--muted);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.16em;
+        }
+        .field { margin-bottom: 16px; }
+        .field label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--muted);
+            letter-spacing: 0.06em;
+        }
+        .field input, .field select {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            background: rgba(18, 16, 28, 0.8);
+            border: 1px solid rgba(200, 190, 220, 0.14);
+            color: var(--text);
+            font-family: "Manrope", sans-serif;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 150ms ease;
+        }
+        .field input:focus, .field select:focus { border-color: rgba(167, 139, 250, 0.4); }
+        .field small { display: block; margin-top: 5px; color: var(--muted); font-size: 0.76rem; }
+        .btn-save {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 24px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #a78bfa, #f472b6);
+            color: #fff;
+            font-family: "Manrope", sans-serif;
+            font-size: 0.85rem;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            cursor: pointer;
+            border: none;
+            transition: opacity 160ms ease, transform 120ms ease;
+            box-shadow: 0 6px 20px rgba(167, 139, 250, 0.3);
+        }
+        .btn-save:hover { opacity: 0.88; transform: translateY(-1px); }
+        .save-row { display: flex; align-items: center; gap: 14px; margin-top: 8px; }
+        .save-msg { font-size: 0.82rem; color: #34d399; display: none; }
+        .power-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 20px;
+            border-radius: 16px;
+            background: rgba(18, 16, 28, 0.6);
+            border: 1px solid rgba(200, 190, 220, 0.1);
+            margin-bottom: 16px;
+        }
+        .power-section-info strong { display: block; font-size: 0.95rem; margin-bottom: 3px; }
+        .power-section-info span { color: var(--muted); font-size: 0.82rem; }
+        .toggle-wrap { display: flex; align-items: center; gap: 10px; }
+        .toggle {
+            position: relative;
+            width: 48px; height: 26px;
+            cursor: pointer;
+        }
+        .toggle input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider {
+            position: absolute;
+            inset: 0;
+            border-radius: 999px;
+            background: rgba(248, 113, 113, 0.3);
+            border: 1px solid rgba(248, 113, 113, 0.4);
+            transition: background 200ms ease, border-color 200ms ease;
+        }
+        .toggle-slider::before {
+            content: "";
+            position: absolute;
+            width: 18px; height: 18px;
+            left: 3px; top: 3px;
+            border-radius: 50%;
+            background: #f87171;
+            transition: transform 200ms ease, background 200ms ease;
+        }
+        .toggle input:checked + .toggle-slider {
+            background: rgba(52, 211, 153, 0.2);
+            border-color: rgba(52, 211, 153, 0.4);
+        }
+        .toggle input:checked + .toggle-slider::before {
+            transform: translateX(22px);
+            background: #34d399;
+        }
+        .toggle-label { font-size: 0.82rem; font-weight: 700; color: var(--muted); min-width: 28px; }
+        @media (max-width: 860px) { .settings-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-brand">
+            <img src="logo.png" alt="Logo" class="header-logo">
+            <div>
+                <h1>Buried Cable Monitoring System</h1>
+                <p>Settings</p>
+            </div>
+        </div>
+        <nav>
+            <a href="home.html"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Home</span></a>
+            <a href="index.html"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg><span>Dashboard</span></a>
+            <a href="history.html"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>History</span></a>
+            <a href="settings.html" class="active"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+            <a href="about.html"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>About</span></a>
+        </nav>
+    </header>
+
+    <main>
+
+        <!-- DEVICE POWER -->
+        <section class="panel">
+            <h2 style="margin:0 0 18px;font-family:'Space Grotesk',sans-serif;font-size:1.18rem;letter-spacing:-0.03em;">Device Control</h2>
+
+            <div class="power-section">
+                <div class="power-section-info">
+                    <strong>ESP32 Power</strong>
+                    <span id="powerStatusText">Loading current state…</span>
+                </div>
+                <div class="toggle-wrap">
+                    <span class="toggle-label" id="toggleLabel">OFF</span>
+                    <label class="toggle">
+                        <input type="checkbox" id="powerToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <span class="toggle-label" id="toggleLabelOn">ON</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SETTINGS FORM -->
+        <section class="panel">
+            <h2 style="margin:0 0 18px;font-family:'Space Grotesk',sans-serif;font-size:1.18rem;letter-spacing:-0.03em;">Dashboard Settings</h2>
+
+            <div class="settings-grid">
+
+                <div class="settings-section">
+                    <h3>Device</h3>
+                    <div class="field">
+                        <label>Device ID</label>
+                        <input type="text" id="cfgDeviceId" placeholder="ESP32-001">
+                        <small>Must match the DEVICE_ID in your ESP32 firmware</small>
+                    </div>
+                    <div class="field">
+                        <label>Poll Interval (seconds)</label>
+                        <input type="number" id="cfgPollInterval" min="2" max="60" placeholder="5">
+                        <small>How often the ESP32 checks for ON/OFF commands</small>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>Detection Thresholds</h3>
+                    <div class="field">
+                        <label>Detected threshold (%)</label>
+                        <input type="number" id="cfgThreshHigh" min="0" max="100" placeholder="75">
+                        <small>Signal above this = CABLE DETECTED</small>
+                    </div>
+                    <div class="field">
+                        <label>Possible threshold (%)</label>
+                        <input type="number" id="cfgThreshMid" min="0" max="100" placeholder="50">
+                        <small>Signal above this = POSSIBLE CABLE</small>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>Map</h3>
+                    <div class="field">
+                        <label>Default Zoom Level</label>
+                        <input type="number" id="cfgMapZoom" min="5" max="20" placeholder="15">
+                    </div>
+                    <div class="field">
+                        <label>Map Style</label>
+                        <select id="cfgMapStyle">
+                            <option value="osm">OpenStreetMap (default)</option>
+                            <option value="topo">Topo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>Display</h3>
+                    <div class="field">
+                        <label>History rows shown on dashboard</label>
+                        <input type="number" id="cfgHistoryRows" min="5" max="50" placeholder="10">
+                    </div>
+                    <div class="field">
+                        <label>Chart data points</label>
+                        <input type="number" id="cfgChartPoints" min="5" max="100" placeholder="20">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="save-row">
+                <button class="btn-save" id="saveBtn">Save Settings</button>
+                <span class="save-msg" id="saveMsg">✓ Saved</span>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = "https://awauazxngkwjikarllui.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_M3t6466_21zA1-X2LTT3KQ_yfwyOx1v";
+        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        const DEFAULTS = {
+            deviceId: "ESP32-001", pollInterval: 5,
+            threshHigh: 75, threshMid: 50,
+            mapZoom: 15, mapStyle: "osm",
+            historyRows: 10, chartPoints: 20
+        };
+
+        function loadSettings() {
+            const s = JSON.parse(localStorage.getItem("bcms_settings") || "{}");
+            const c = { ...DEFAULTS, ...s };
+            document.getElementById("cfgDeviceId").value      = c.deviceId;
+            document.getElementById("cfgPollInterval").value  = c.pollInterval;
+            document.getElementById("cfgThreshHigh").value    = c.threshHigh;
+            document.getElementById("cfgThreshMid").value     = c.threshMid;
+            document.getElementById("cfgMapZoom").value       = c.mapZoom;
+            document.getElementById("cfgMapStyle").value      = c.mapStyle;
+            document.getElementById("cfgHistoryRows").value   = c.historyRows;
+            document.getElementById("cfgChartPoints").value   = c.chartPoints;
+        }
+
+        document.getElementById("saveBtn").addEventListener("click", () => {
+            const s = {
+                deviceId:     document.getElementById("cfgDeviceId").value || DEFAULTS.deviceId,
+                pollInterval: parseInt(document.getElementById("cfgPollInterval").value) || DEFAULTS.pollInterval,
+                threshHigh:   parseInt(document.getElementById("cfgThreshHigh").value) || DEFAULTS.threshHigh,
+                threshMid:    parseInt(document.getElementById("cfgThreshMid").value) || DEFAULTS.threshMid,
+                mapZoom:      parseInt(document.getElementById("cfgMapZoom").value) || DEFAULTS.mapZoom,
+                mapStyle:     document.getElementById("cfgMapStyle").value,
+                historyRows:  parseInt(document.getElementById("cfgHistoryRows").value) || DEFAULTS.historyRows,
+                chartPoints:  parseInt(document.getElementById("cfgChartPoints").value) || DEFAULTS.chartPoints,
+            };
+            localStorage.setItem("bcms_settings", JSON.stringify(s));
+            const msg = document.getElementById("saveMsg");
+            msg.style.display = "inline";
+            setTimeout(() => msg.style.display = "none", 2500);
+        });
+
+        // Power toggle
+        const toggle = document.getElementById("powerToggle");
+        const statusText = document.getElementById("powerStatusText");
+
+        async function loadPowerState() {
+            const deviceId = (JSON.parse(localStorage.getItem("bcms_settings") || "{}").deviceId) || "ESP32-001";
+            const { data } = await sb.from("device_control").select("command").eq("device_id", deviceId).maybeSingle();
+            const isOn = !data || data.command !== "OFF";
+            toggle.checked = isOn;
+            statusText.textContent = isOn ? "Device is currently ON" : "Device is currently OFF";
+        }
+
+        toggle.addEventListener("change", async () => {
+            const deviceId = (JSON.parse(localStorage.getItem("bcms_settings") || "{}").deviceId) || "ESP32-001";
+            const command = toggle.checked ? "ON" : "OFF";
+            statusText.textContent = "Sending command…";
+            const { error } = await sb.from("device_control").upsert(
+                { device_id: deviceId, command, updated_at: new Date().toISOString() },
+                { onConflict: "device_id" }
+            );
+            if (error) {
+                statusText.textContent = "Error: " + error.message;
+                toggle.checked = !toggle.checked;
+            } else {
+                statusText.textContent = command === "ON" ? "Device is currently ON" : "Device is currently OFF";
+            }
+        });
+
+        loadSettings();
+        loadPowerState();
+    </script>
+</body>
+</html>

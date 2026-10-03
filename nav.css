@@ -1,0 +1,86 @@
+/* ======================================================
+   SHARED NAV STYLES — nav lives inside header as second row
+   ====================================================== */
+
+.header-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.header-logo {
+    height: 72px;
+    width: auto;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+@media (max-width: 860px) { .header-logo { height: 58px; } }
+@media (max-width: 520px) { .header-logo { height: 46px; } }
+
+header {
+    flex-wrap: wrap;
+    row-gap: 14px;
+}
+
+nav {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 4px 6px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(200, 190, 220, 0.1);
+    border-radius: 999px;
+    order: 10; /* always last row inside header */
+}
+
+nav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 15px;
+    border-radius: 999px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    transition: background 140ms ease, color 140ms ease;
+    white-space: nowrap;
+}
+
+nav a svg {
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+nav a:hover {
+    background: rgba(167, 139, 250, 0.1);
+    color: var(--text);
+}
+
+nav a.active {
+    background: rgba(167, 139, 250, 0.15);
+    color: #a78bfa;
+    border: 1px solid rgba(167, 139, 250, 0.24);
+}
+
+/* ── tablet ── */
+@media (max-width: 860px) {
+    nav a { padding: 6px 12px; font-size: 0.76rem; }
+}
+
+/* ── phone ── */
+@media (max-width: 520px) {
+    nav { justify-content: center; border-radius: 16px; }
+    nav a span { display: none; }
+    nav a { padding: 8px 10px; }
+    nav a svg { width: 16px; height: 16px; }
+}
