@@ -23,7 +23,24 @@ const supabaseClient =
 
 
 // ======================================================
-// 2. GLOBAL VARIABLES
+// 2. SETTINGS
+// ======================================================
+
+const DEFAULTS = {
+    deviceId: "ESP32-001",
+    threshHigh: 75,
+    threshMid: 50,
+    mapZoom: 15,
+    mapStyle: "osm",
+    historyRows: 10,
+    chartPoints: 20
+};
+
+const CFG = { ...DEFAULTS, ...JSON.parse(localStorage.getItem("bcms_settings") || "{}") };
+
+
+// ======================================================
+// 3. GLOBAL VARIABLES
 // ======================================================
 
 let history = [];
@@ -52,17 +69,22 @@ const CONTROLLER_REFRESH_INTERVAL_MS = 500;
 
 
 // ======================================================
-// 3. MAP INITIALIZATION
+// 4. MAP INITIALIZATION
 // ======================================================
+
+const TILE_URLS = {
+    osm:  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    topo: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png"
+};
 
 const map = L.map("map").setView(
     [19.0760, 72.8777],
-    15
+    CFG.mapZoom
 );
 
 
 L.tileLayer(
-    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    TILE_URLS[CFG.mapStyle] || TILE_URLS.osm,
     {
         attribution:
             "&copy; OpenStreetMap contributors"
@@ -158,7 +180,7 @@ document.getElementById("locateBtn").addEventListener("click", function () {
 
 
 // ======================================================
-// 4. CHART INITIALIZATION
+// 5. CHART INITIALIZATION
 // ======================================================
 
 const ctx =
@@ -278,7 +300,7 @@ const signalChart =
 
 
 // ======================================================
-// 5. LOAD SENSOR DATA FROM SUPABASE
+// 6. LOAD SENSOR DATA FROM SUPABASE
 // ======================================================
 
 async function loadSensorData() {
@@ -307,7 +329,7 @@ async function loadSensorData() {
             }
         )
 
-        .limit(20);
+        .limit(CFG.chartPoints);
 
 
     // Error handling
@@ -430,7 +452,7 @@ async function loadSensorData() {
 
 
 // ======================================================
-// 6. UPDATE DASHBOARD
+// 7. UPDATE DASHBOARD
 // ======================================================
 
 function updateDashboard(
@@ -665,7 +687,7 @@ function updateDashboard(
 
         map.setView(
             position,
-            17
+            CFG.mapZoom
         );
 
 
@@ -690,7 +712,7 @@ function updateDashboard(
 
 
 // ======================================================
-// 7. ADD MAP POINT
+// 8. ADD MAP POINT
 // ======================================================
 
 function addMapPoint(
@@ -752,7 +774,7 @@ function addMapPoint(
 
 
 // ======================================================
-// 8. UPDATE SIGNAL CHART
+// 9. UPDATE SIGNAL CHART
 // ======================================================
 
 function updateSignalChart(
@@ -796,13 +818,13 @@ function updateSignalChart(
         );
 
 
-    // Maximum 20 points
+    // Maximum CFG.chartPoints points
 
     if (
         signalChart
             .data
             .labels
-            .length > 20
+            .length > CFG.chartPoints
     ) {
 
         signalChart
@@ -823,7 +845,7 @@ function updateSignalChart(
 
 
 // ======================================================
-// 9. HISTORY TABLE
+// 10. HISTORY TABLE
 // ======================================================
 
 function addHistory(
@@ -861,10 +883,10 @@ function addHistory(
     });
 
 
-    // Maximum 10 rows
+    // Maximum CFG.historyRows rows
 
     if (
-        history.length > 10
+        history.length > CFG.historyRows
     ) {
 
         history.pop();
@@ -878,7 +900,7 @@ function addHistory(
 
 
 // ======================================================
-// 10. RENDER HISTORY TABLE
+// 11. RENDER HISTORY TABLE
 // ======================================================
 
 function renderHistory() {
@@ -929,14 +951,15 @@ function renderHistory() {
 
 function statusBadge(status) {
     const s = String(status || "").toUpperCase();
-    if (s === "DETECTED") return `<span class="badge badge-detected">${s}</span>`;
-    if (s === "NOT DETECTED" || s === "NOT_DETECTED") return `<span class="badge badge-not-detected">${s}</span>`;
+    if (s === "DETECTED" || s === "CABLE DETECTED") return `<span class="badge badge-detected">${s}</span>`;
+    if (s === "NOT DETECTED" || s === "NOT_DETECTED" || s === "NO CABLE") return `<span class="badge badge-not-detected">${s}</span>`;
+    if (s === "POSSIBLE CABLE" || s === "POSSIBLE") return `<span class="badge badge-unknown">${s}</span>`;
     return `<span class="badge badge-unknown">${s || "UNKNOWN"}</span>`;
 }
 
 
 // ======================================================
-// 11. REALTIME CONNECTION
+// 12. REALTIME CONNECTION
 // ======================================================
 
 function startRealtime() {
@@ -1064,7 +1087,7 @@ function startRealtime() {
 
 
 // ======================================================
-// 12. CONTROLLER STATUS
+// 13. CONTROLLER STATUS
 // ======================================================
 
 function refreshControllerStatus() {
@@ -1135,7 +1158,7 @@ function refreshControllerStatus() {
 
     const deviceId =
         reading?.device_id ||
-        "ESP32";
+        CFG.deviceId;
 
 
     const controllerStatus =
@@ -1614,7 +1637,7 @@ function controllerStatusDetail(
 
     const deviceId =
         reading?.device_id ||
-        "ESP32";
+        CFG.deviceId;
 
 
     return `${deviceId} • ${fallbackMessage}`;
@@ -1700,7 +1723,7 @@ setInterval(
 
 
 // ======================================================
-// 12. TIME FORMATTER
+// 14. TIME FORMATTER
 // ======================================================
 
 function formatTime(
@@ -1722,7 +1745,7 @@ function formatTime(
 
 
 // ======================================================
-// 13. START APPLICATION
+// 15. START APPLICATION
 // ======================================================
 
 console.log(
@@ -1740,7 +1763,7 @@ refreshControllerStatus();
 
 
 // ======================================================
-// 14. DEVICE POWER CONTROL
+// 16. DEVICE POWER CONTROL
 // ======================================================
 
 let devicePowerState = "ON";
@@ -1769,7 +1792,7 @@ function applyPowerState(state) {
 
 
 async function loadPowerState() {
-    const deviceId = lastTelemetryReading?.device_id || "ESP32";
+    const deviceId = lastTelemetryReading?.device_id || CFG.deviceId;
 
     const { data, error } = await supabaseClient
         .from("device_control")
@@ -1784,7 +1807,7 @@ async function loadPowerState() {
 
 
 async function sendPowerCommand(command) {
-    const deviceId = lastTelemetryReading?.device_id || "ESP32";
+    const deviceId = lastTelemetryReading?.device_id || CFG.deviceId;
 
     powerBtn.classList.add("is-sending");
 
