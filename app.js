@@ -36,7 +36,10 @@ const DEFAULTS = {
     chartPoints: 20
 };
 
-const CFG = { ...DEFAULTS, ...JSON.parse(localStorage.getItem("bcms_settings") || "{}") };
+const VALID_MAP_STYLES = ["osm","topo","satellite","terrain","dark","light","cycle"];
+const _raw = JSON.parse(localStorage.getItem("bcms_settings") || "{}");
+if (_raw.mapStyle && !VALID_MAP_STYLES.includes(_raw.mapStyle)) { _raw.mapStyle = "osm"; localStorage.setItem("bcms_settings", JSON.stringify(_raw)); }
+const CFG = { ...DEFAULTS, ..._raw };
 
 
 // ======================================================
@@ -72,29 +75,23 @@ const CONTROLLER_REFRESH_INTERVAL_MS = 500;
 // 4. MAP INITIALIZATION
 // ======================================================
 
-const TILE_URLS = {
-    osm:       "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-    topo:      "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
-    satellite: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-    terrain:   "https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}.png",
-    dark:      "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-    light:     "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-    cycle:     "https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png"
+const TILE_LAYERS = {
+    osm:       { url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",                                                attr: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",  filter: "",                                                         sub: "abc" },
+    topo:      { url: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",                                                  attr: "&copy; OpenStreetMap contributors, &copy; OpenTopoMap",                                    filter: "",                                                         sub: "abc" },
+    satellite: { url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",     attr: "Tiles &copy; Esri &mdash; Source: Esri, USGS, NOAA",                                         filter: "",                                                         sub: "" },
+    terrain:   { url: "https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",                                             attr: "&copy; OpenStreetMap contributors, Tiles &copy; HOT",                                      filter: "",                                                         sub: "abc" },
+    dark:      { url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",                                                attr: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",  filter: "invert(1) hue-rotate(180deg) brightness(0.85) saturate(0.6)",  sub: "abc" },
+    light:     { url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",                                                attr: "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors",  filter: "brightness(1.1) saturate(0.8)",                             sub: "abc" },
+    cycle:     { url: "https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png",                                 attr: "&copy; <a href='https://www.cyclosm.org'>CyclOSM</a>, &copy; OpenStreetMap contributors",   filter: "",                                                         sub: "abc" }
 };
 
-const map = L.map("map").setView(
-    [19.0760, 72.8777],
-    CFG.mapZoom
-);
+const map = L.map("map").setView([19.0760, 72.8777], CFG.mapZoom);
 
-
-L.tileLayer(
-    TILE_URLS[CFG.mapStyle] || TILE_URLS.osm,
-    {
-        attribution:
-            "&copy; OpenStreetMap contributors"
-    }
-).addTo(map);
+const _tl = TILE_LAYERS[CFG.mapStyle] || TILE_LAYERS.osm;
+const _tlOpts = { attribution: _tl.attr, maxZoom: 19 };
+if (_tl.sub) _tlOpts.subdomains = _tl.sub;
+L.tileLayer(_tl.url, _tlOpts).addTo(map);
+document.getElementById("map").style.filter = _tl.filter;
 
 
 // Current detection marker
